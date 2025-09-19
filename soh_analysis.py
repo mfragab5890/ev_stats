@@ -5,6 +5,7 @@ import tracemalloc
 from math import floor
 from pathlib import Path
 from typing import Dict , List , Optional
+from build_report import build_reports
 
 
 # --------- Constants & thresholds assumptions ----------
@@ -112,14 +113,12 @@ class BatteryDataProcessor:
             self.charge_end = False
             self.reached_full_charge = False
             self.current_charge = []
-            print("End Of charge")
-
 
     def get_average_soh(self):
         """This method calculates the final average SoH from all the charge cycles results we processed."""
         if self.charge_results:
             average = sum(self.charge_results) / len(self.charge_results)
-            return average
+            return round(average, 2)
         return None
 
     def handle_overall_soc_changes(self, current_soc, event):
@@ -390,6 +389,7 @@ def main():
             battery_data =  handle_battery_data_extraction(result)
             print("Battery Data")
             print(json.dumps(battery_data, indent=4))
+            build_reports(battery_data)
 
             # Now we can calculate and print our performance metrics.
             end_time = time.perf_counter()

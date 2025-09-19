@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EV Battery Health Report</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --card: #121830;
+      --ink: #e8ecff;
+      --muted: #9aa3b2;
+      --accent: #5b8cff;
+      --ok: #2ecc71;
+      --warn: #f1c40f;
+      --bad: #e74c3c;
+      --chip: #1b223d;
+    }
+    html, body { background: var(--bg); color: var(--ink); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial; margin: 0; }
+    .container { max-width: 960px; margin: 24px auto; padding: 0 16px; }
+    .header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+    .title { font-size: 28px; font-weight: 700; margin: 0; }
+    .subtitle { color: var(--muted); margin: 4px 0 0 0; }
+    .card { background: var(--card); border-radius: 16px; padding: 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.35); }
+    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
+    .col-12 { grid-column: span 12; }
+    .col-6 { grid-column: span 6; }
+    .chip { background: var(--chip); display: inline-block; padding: 6px 10px; border-radius: 999px; font-size: 12px; color: var(--muted); margin-right: 8px; }
+    .metric { font-size: 36px; font-weight: 800; margin: 4px 0; }
+    .label { color: var(--muted); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+    .row { display: flex; gap: 16px; align-items: center; }
+    .spacer { height: 12px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 10px 8px; font-size: 14px; }
+    thead th { color: var(--muted); font-weight: 600; border-bottom: 1px solid #2a335a; }
+    tbody tr { border-bottom: 1px solid #1b244a; }
+    .pill { padding: 2px 8px; border-radius: 10px; font-size: 12px; display: inline-block; }
+    .ok { background: rgba(46, 204, 113, .15); color: var(--ok); }
+    .warn { background: rgba(241, 196, 15, .15); color: var(--warn); }
+    .bad { background: rgba(231, 76, 60, .2); color: var(--bad); }
+    .muted { color: var(--muted); }
+    .small { font-size: 12px; }
+    .right { text-align: right; }
+    .footer { color: var(--muted); font-size: 12px; margin-top: 20px; }
+    @media print {
+    /* Light theme + crisp borders for print engines */
+    body { background: #fff; color: #111; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .card { box-shadow: none; border: 1px solid #ddd; }
+    :root { --ink: #111; --muted: #555; }
+
+    /* Use Flex instead of CSS Grid for print (WeasyPrint/wkhtmltopdf don’t support grid well) */
+    .grid { display: flex; flex-wrap: wrap; gap: 16px; }
+    .col-12 { flex: 0 0 100%; }
+    .col-6  { flex: 0 0 calc(50% - 8px); }  /* 8px = half the gap */
+
+    /* Page + breaks */
+    @page { size: A4; margin: 16mm; }
+    .header, .card, table { break-inside: avoid; }
+    tr, td, th { break-inside: avoid; }
+    thead { display: table-header-group; } /* repeat table headers on page breaks */
+  }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div>
+        <h1 class="title">EV Battery Health Report</h1>
+        <p class="subtitle">Generated: {{ generated_at }}</p>
+      </div>
+      <div class="card" style="min-width: 260px;">
+        <div class="label">Vehicle</div>
+        <div style="font-weight:700;margin-top:6px">{{ v.make }} {{ v.model }}</div>
+        <div class="muted small">{{ v.year }} &middot; VIN {{ v.vin }}</div>
+        <div class="spacer"></div>
+        <div class="row">
+          <span class="chip">Design Capacity</span>
+          <div>{{ v.design_capacity_kwh }} kWh</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="spacer"></div>
+
+    <div class="grid">
+      <div class="col-6">
+        <div class="card">
+          <div class="label">Battery State of Health</div>
+          {% set soh_cls = 'ok' if soh is not none and soh >= 90 else ('warn' if soh and soh >= 80 else 'bad') %}
+          <div class="metric">{{ soh if soh is not none else '—' }}<span class="small">%</span></div>
+          <span class="pill {{ soh_cls }}">{{ 'Good' if soh_cls=='ok' else ('Watch' if soh_cls=='warn' else 'Investigate') }}</span>
+          <div class="muted small">SoH is estimated from charge events using ΔSoC and energy-in. See notes below.</div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="card">
+          <div class="label">Charge / Discharge Cycles</div>
+          <div class="row">
+            <div style="flex:1">
+              <div class="small muted">Overall (EFC)</div>
+              <div class="metric">{{ cdc.overall_cycles }}</div>
+            </div>
+            <div style="flex:1">
+              <div class="small muted">Charge</div>
+              <div class="metric">{{ cdc.charge_cycles }}</div>
+            </div>
+            <div style="flex:1">
+              <div class="small muted">Discharge</div>
+              <div class="metric">{{ cdc.discharge_cycles }}</div>
+            </div>
+          </div>
+          <div class="muted small">EFC sums SoC changes over time / 100.</div>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="card">
+          <div class="label">Voltage Anomalies</div>
+          {% if anomalies.voltage.voltage_range_anomalies or anomalies.voltage.voltage_difference_anomalies %}
+            {% if anomalies.voltage.voltage_range_anomalies %}
+              <h3 class="small muted">Out-of-Range</h3>
+              <table>
+                <thead><tr><th>Timestamp</th><th>Min V</th><th>Max V</th><th>Allowed</th><th>Note</th></tr></thead>
+                <tbody>
+                {% for a in anomalies.voltage.voltage_range_anomalies %}
+                  {% set sev = 'bad' if a.comment.lower().find('too high')!=-1 or a.comment.lower().find('too low')!=-1 else 'warn' %}
+                  <tr>
+                    <td class="small">{{ a.timestamp }}</td>
+                    <td>{{ "%.3f"|format(a.min_voltage) }} V</td>
+                    <td>{{ "%.3f"|format(a.max_voltage) }} V</td>
+                    <td class="small muted">{{ a.min_allowed_voltage }}–{{ a.max_allowed_voltage }} V</td>
+                    <td><span class="pill {{ sev }}">{{ a.comment }}</span></td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            {% endif %}
+            {% if anomalies.voltage.voltage_difference_anomalies %}
+              <div class="spacer"></div>
+              <h3 class="small muted">Cell Imbalance</h3>
+              <table>
+                <thead><tr><th>Timestamp</th><th class="right">ΔV (mV)</th><th>Threshold</th><th>Context</th></tr></thead>
+                <tbody>
+                {% for a in anomalies.voltage.voltage_difference_anomalies %}
+                  {% set sev = 'warn' if a.voltage_difference <= 200 else 'bad' %}
+                  <tr>
+                    <td class="small">{{ a.timestamp }}</td>
+                    <td class="right">{{ "%.0f"|format(a.voltage_difference) }}</td>
+                    <td class="small">{{ a.threshold }} mV</td>
+                    <td><span class="pill {{ sev }}">{{ a.comment }}</span></td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            {% endif %}
+          {% else %}
+            <div class="muted">No voltage anomalies detected.</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="card">
+          <div class="label">Temperature Anomalies</div>
+          {% if anomalies.temperature.temperature_range_anomalies or anomalies.temperature.temperature_difference_anomalies %}
+            {% if anomalies.temperature.temperature_range_anomalies %}
+              <h3 class="small muted">Out-of-Range</h3>
+              <table>
+                <thead><tr><th>Timestamp</th><th>Min (°C)</th><th>Max (°C)</th><th>Allowed</th><th>Note</th></tr></thead>
+                <tbody>
+                {% for a in anomalies.temperature.temperature_range_anomalies %}
+                  {% set sev = 'bad' %}
+                  <tr>
+                    <td class="small">{{ a.timestamp }}</td>
+                    <td>{{ "%.1f"|format(a.min_cell_temperature) }}</td>
+                    <td>{{ "%.1f"|format(a.max_cell_temperature) }}</td>
+                    <td class="small muted">{{ a.min_allowed_cell_temperature }}–{{ a.max_allowed_cell_temperature }} °C</td>
+                    <td><span class="pill {{ sev }}">{{ a.comment }}</span></td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            {% endif %}
+            {% if anomalies.temperature.temperature_difference_anomalies %}
+              <div class="spacer"></div>
+              <h3 class="small muted">Spread Between Cells</h3>
+              <table>
+                <thead><tr><th>Timestamp</th><th class="right">ΔT (°C)</th><th>Max Allowed</th></tr></thead>
+                <tbody>
+                {% for a in anomalies.temperature.temperature_difference_anomalies %}
+                  {% set sev = 'warn' if a.cells_temperature_difference < 15 else 'bad' %}
+                  <tr>
+                    <td class="small">{{ a.timestamp }}</td>
+                    <td class="right">{{ "%.1f"|format(a.cells_temperature_difference) }}</td>
+                    <td class="small">{{ a.max_cells_temperature_difference }} °C</td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            {% endif %}
+          {% else %}
+            <div class="muted">No temperature anomalies detected.</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="card">
+          <div class="label">Notes</div>
+          <ul class="small muted">
+            <li>SoH derived as: estimated_capacity = energy_in / (ΔSoC/100). SoH% = estimated_capacity / design_capacity × 100.</li>
+            <li>Cycles shown as equivalent-full-cycles (sum of absolute SoC changes / 100).</li>
+            <li>Voltage imbalance thresholds adapt by load (C-rate).</li>
+            <li>For sales use, avoid rounding SoH upward; list confidence bands instead.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      © {{ year }} Battery Report. Generated by EV Diagnostics.
+    </div>
+  </div>
+</body>
+</html>
