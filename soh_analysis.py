@@ -32,9 +32,8 @@ class BatteryDataProcessor:
         # The battery's original capacity, which we'll need for our SoH calculation.
         self.design_capacity_kwh = design_capacity_kwh
         # For our cycle counting, we need to track the last SoC seen and the cumulative total change.
-        self.last_soc: Optional[float] = 0.0
+        self.last_soc: Optional[float] = None
         self.cumulative_soc_delta: float = 0.0
-        self.cumulative_discharge_soc_delta: float = 0.0
         self.cumulative_charge_soc_delta: float = 0.0
 
     @staticmethod
@@ -71,7 +70,7 @@ class BatteryDataProcessor:
         # when charge_end flag is raised this means it's the last event in this single charge cycle so we get results.
         if self.charge_end:
             last_log = self.current_charge
-            
+
             # We grab the start and end SoC directly and sum up all the energy added.
             start_soc = last_log[0]['soc']
             end_soc = last_log[-1]['soc']
@@ -101,23 +100,30 @@ class BatteryDataProcessor:
 
     def handle_overall_soc_changes(self, current_soc, event):
         """This method calculates overall and event based SoC delta to calculate cycle of charge/discharge"""
+
+        if self.last_soc is None:
+            self.last_soc = current_soc
+            return
+
         # first overall cumulative SoC
         current_soc_delta = abs(current_soc - self.last_soc)
         self.cumulative_soc_delta += current_soc_delta
         self.last_soc = current_soc
-
+        # Second get charge only so later we can calculate discharge
         if event == CHARGE_EVENT:
             self.cumulative_charge_soc_delta += current_soc_delta
 
-        if event == DRIVE_EVENT or event == REST_EVENT:
-            self.cumulative_discharge_soc_delta += current_soc_delta
 
     def get_average_charge_discharge_cycles_data(self):
-        """This method the actual count for the charge discharge cycles overall & event based"""
+        """This method the actual count for the charge discharge cycles overall & event based through
+        a full cycle (100%)"""
+        overall_cycles = round(self.cumulative_soc_delta/100, 2)
+        charge_cycles = round(self.cumulative_charge_soc_delta/100, 2)
+        discharge_cycles = round((overall_cycles- charge_cycles), 2)
         return {
-            "overall_cdc": round(self.cumulative_soc_delta/100, 2),
-            "charge_cdc": round(self.cumulative_charge_soc_delta/100, 2),
-            "discharge_cdc": round(self.cumulative_discharge_soc_delta/100, 2)
+            "overall_cycles": overall_cycles,
+            "charge_cycles": charge_cycles,
+            "discharge_cycles": discharge_cycles
         }
 
 
@@ -128,11 +134,7 @@ def handle_battery_data_extraction(log_data):
     logs = log_data.get("logs")
     if not logs:
         # If there are no logs to process, we return early.
-        return {
-            "soh": None,
-            "cd_count": "",
-            "anomalies": ""
-        }
+        return {}
 
     processor = BatteryDataProcessor(vehicle_data["design_capacity_kwh"])
 
