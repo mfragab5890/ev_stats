@@ -15,12 +15,21 @@ REST_EVENT = "rest"
 
 # exclude samples that didn't exceed a certain percentage on calculation for the data to be accurate.
 MIN_DELTA_SOC = 5.0
-
+# max voltage per cell
+MAX_CELL_VOLTAGE = 4.2
+# min voltage per cell
+MIN_CELL_VOLTAGE = 2.5
+# max cell voltage difference for EV at rest.
+IMBALANCE_MV_AT_REST = 30.0
+# max cell voltage difference for EV under load.
+IMBALANCE_MV_UNDER_LOAD = 60.0
+# We use this to decide if the battery is "at rest" or "under load. so we can detect voltage anomalies"
+C_RATE_LOAD_THRESHOLD = 0.1
 
 class BatteryDataProcessor:
     """This class is like a temporary notebook for our data. It holds all the info we need
     while we loop through the logs, so we don't have to use messy global variables or loop over data more than once."""
-    def __init__(self, design_capacity_kwh):
+    def __init__(self, design_capacity_kwh, nominal_pack_voltage):
         # keep track of the current charge cycle's events.
         self.current_charge: List[Dict[str, float]] = []
         # A flag to know if the battery has hit 100% SoC so we can neglect other records even if event still charging.
@@ -31,10 +40,15 @@ class BatteryDataProcessor:
         self.charge_results: List[float] = []
         # The battery's original capacity, which we'll need for our SoH calculation.
         self.design_capacity_kwh = design_capacity_kwh
+        # The battery's nominal_pack_voltage, which we'll need for our voltage anomalies calculation.
+        self.nominal_pack_voltage = nominal_pack_voltage
         # For our cycle counting, we need to track the last SoC seen and the cumulative total change.
         self.last_soc: Optional[float] = None
         self.cumulative_soc_delta: float = 0.0
         self.cumulative_charge_soc_delta: float = 0.0
+        # To get all voltages anomalies we need to store and aggregate detected ones
+        self.voltage_difference_anomalies: List[dict] = []
+        self.voltage_range_anomalies: List[dict] = []
 
     @staticmethod
     def get_single_charge_result(cumulative_charge, delta_soc, design_capacity_kwh):
@@ -126,6 +140,88 @@ class BatteryDataProcessor:
             "discharge_cycles": discharge_cycles
         }
 
+    def get_voltage_anomalies(self, log):
+        voltage_range_anomalies = []
+        voltage_difference_anomalies = []
+        cell_voltages = log['cell_voltages']
+        min_voltage = min(cell_voltages)
+        max_voltage = max(cell_voltages)
+        voltage_difference_mv = (max_voltage - min_voltage) * 1000
+
+        # detect anomalies that has their voltage out of range
+        if max_voltage > MAX_CELL_VOLTAGE:
+            voltage_range_anomalies.append({
+                "min_voltage": min_voltage,
+                "max_voltage": max_voltage,
+                "max_allowed_voltage": MAX_CELL_VOLTAGE,
+                "min_allowed_voltage": MIN_CELL_VOLTAGE,
+                "comment": "Cell voltage too high",
+                "timestamp": log["ts"]
+            })
+        if min_voltage < MIN_CELL_VOLTAGE:
+            voltage_range_anomalies.append({
+                "min_voltage": min_voltage,
+                "max_voltage": max_voltage,
+                "max_allowed_voltage": MAX_CELL_VOLTAGE,
+                "min_allowed_voltage": MIN_CELL_VOLTAGE,
+                "comment": "Cell voltage too low",
+                "timestamp": log["ts"]
+            })
+
+        # calculate nominal capacity in order to calculate current c_rate
+        nominal_capacity = self.design_capacity_kwh * 1000 / self.nominal_pack_voltage
+
+        # now calculating the current c_rate to decide which threshold to use at rest or under load
+        current_c_rate = abs(log["pack_current"])/nominal_capacity
+
+        # pick which threshold we should use based on current c_rate
+        if current_c_rate > C_RATE_LOAD_THRESHOLD:
+            threshold = IMBALANCE_MV_UNDER_LOAD
+            comment = "Cell voltage difference exceeds threshold under load"
+        else:
+            threshold = IMBALANCE_MV_AT_REST
+            comment = "Cell voltage difference exceeds threshold at rest"
+        if voltage_difference_mv > threshold:
+            voltage_difference_anomalies.append({
+                "voltage_difference": voltage_difference_mv,
+                "comment": comment,
+                "threshold": threshold,
+                "timestamp": log["ts"]
+            })
+
+        return {
+            **(
+                {"voltage_difference_anomalies": voltage_difference_anomalies}
+                if any(voltage_difference_anomalies)
+                else {}
+            ),
+            **(
+                {"voltage_range_anomalies": voltage_range_anomalies}
+                if any(voltage_range_anomalies)
+                else {}
+            )
+        }
+
+    def get_temperature_anomalies(self, log):
+        cell_temperatures = log["cell_temps_c"]
+        pass
+
+    def handle_anomalies_detection(self, log):
+        voltage_anomalies = self.get_voltage_anomalies(log)
+        if voltage_anomalies:
+            (voltage_anomalies.get("voltage_difference_anomalies") and
+             self.voltage_difference_anomalies.extend(voltage_anomalies["voltage_difference_anomalies"]))
+            voltage_anomalies.get("voltage_range_anomalies") and self.voltage_range_anomalies.extend(voltage_anomalies["voltage_range_anomalies"])
+        temperature_anomalies = self.get_temperature_anomalies(log)
+
+    def get_detected_anomalies(self):
+        return {
+            "voltage": {
+                "voltage_range_anomalies": self.voltage_range_anomalies,
+                "voltage_difference_anomalies": self.voltage_difference_anomalies
+            },
+            "temperature": "temperature_anomalies"
+        }
 
 def handle_battery_data_extraction(log_data):
     """This is the main function that coordinates everything. It loops through the logs
@@ -136,12 +232,15 @@ def handle_battery_data_extraction(log_data):
         # If there are no logs to process, we return early.
         return {}
 
-    processor = BatteryDataProcessor(vehicle_data["design_capacity_kwh"])
+    processor = BatteryDataProcessor(vehicle_data["design_capacity_kwh"], vehicle_data["nominal_pack_voltage"])
 
     for i, log in enumerate(logs):
         # handle overall SoC changes
         event = log["event"]
         processor.handle_overall_soc_changes(log["soc"], event)
+
+        # handle anomalies detection
+        processor.handle_anomalies_detection(log)
 
         # We check the `event` to see what kind of data we're looking at.
         if event == CHARGE_EVENT:
@@ -155,8 +254,9 @@ def handle_battery_data_extraction(log_data):
     # Second: Count of charge/discharge cycles
     cdc_data = processor.get_average_charge_discharge_cycles_data()
 
-    # TODO Third: flagged anomalies (voltage imbalance, cell overheating)
-
+    # Third: flagged anomalies (voltage imbalance, cell overheating)
+    # TODO handle temperature anomalies
+    anomalies = processor.get_detected_anomalies()
     battery_data = {
         "vehicle_info": {
             "vin": vehicle_data["vin"],
@@ -167,7 +267,7 @@ def handle_battery_data_extraction(log_data):
         },
         "soh": soh,
         "cdc_data": cdc_data,
-        "anomalies": ""
+        "anomalies": anomalies
     }
     return battery_data
 
