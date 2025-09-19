@@ -25,6 +25,13 @@ IMBALANCE_MV_AT_REST = 30.0
 IMBALANCE_MV_UNDER_LOAD = 60.0
 # We use this to decide if the battery is "at rest" or "under load. so we can detect voltage anomalies"
 C_RATE_LOAD_THRESHOLD = 0.1
+# max cell temp allowed
+MAX_CELL_TEMP_C = 55.0
+# min cell temp allowed
+MIN_CELL_TEMP_C = 0.0
+# max temp differences between cells
+MAX_CELLS_TEMP_DIFFERENCE = 5.0
+
 
 class BatteryDataProcessor:
     """This class is like a temporary notebook for our data. It holds all the info we need
@@ -46,9 +53,12 @@ class BatteryDataProcessor:
         self.last_soc: Optional[float] = None
         self.cumulative_soc_delta: float = 0.0
         self.cumulative_charge_soc_delta: float = 0.0
-        # To get all voltages anomalies we need to store and aggregate detected ones
+        # To get all voltage anomalies we need to store and aggregate detected ones
         self.voltage_difference_anomalies: List[dict] = []
         self.voltage_range_anomalies: List[dict] = []
+        # To get all temperature anomalies we need to store and aggregate detected ones
+        self.temperature_difference_anomalies: List[dict] = []
+        self.temperature_range_anomalies: List[dict] = []
 
     @staticmethod
     def get_single_charge_result(cumulative_charge, delta_soc, design_capacity_kwh):
@@ -141,6 +151,8 @@ class BatteryDataProcessor:
         }
 
     def get_voltage_anomalies(self, log):
+        """ This method gets voltage anomalies from all the charge cycles results we processed.
+        it studies two aspects 1- range limits, 2- difference limit"""
         voltage_range_anomalies = []
         voltage_difference_anomalies = []
         cell_voltages = log['cell_voltages']
@@ -202,17 +214,77 @@ class BatteryDataProcessor:
             )
         }
 
-    def get_temperature_anomalies(self, log):
+    @staticmethod
+    def get_temperature_anomalies(log):
+        """
+        This method gets temperature anomalies from all the charge cycles results we processed.
+        It studies two aspects 1- range limits, 2- difference limit
+        """
+        temperature_range_anomalies = []
+        temperature_difference_anomalies = []
         cell_temperatures = log["cell_temps_c"]
-        pass
+        max_cell_temperature = max(cell_temperatures)
+        min_cell_temperature = min(cell_temperatures)
+        cells_temperature_difference = max_cell_temperature - min_cell_temperature
+
+        if max_cell_temperature > MAX_CELL_TEMP_C:
+            temperature_range_anomalies.append({
+                "min_cell_temperature": min_cell_temperature,
+                "max_cell_temperature": max_cell_temperature,
+                "min_allowed_cell_temperature": MIN_CELL_TEMP_C,
+                "max_allowed_cell_temperature": MAX_CELL_TEMP_C,
+                "comment": "Cell temperature too high",
+                "timestamp": log["ts"]
+            })
+
+        if min_cell_temperature < MIN_CELL_TEMP_C:
+            temperature_range_anomalies.append({
+                "min_cell_temperature": min_cell_temperature,
+                "max_cell_temperature": max_cell_temperature,
+                "min_allowed_cell_temperature": MIN_CELL_TEMP_C,
+                "max_allowed_cell_temperature": MAX_CELL_TEMP_C,
+                "comment": "Cell temperature too low",
+                "timestamp": log["ts"]
+            })
+
+        if cells_temperature_difference > MAX_CELLS_TEMP_DIFFERENCE:
+            temperature_difference_anomalies.append({
+                "cells_temperature_difference": cells_temperature_difference,
+                "max_cells_temperature_difference": MAX_CELLS_TEMP_DIFFERENCE,
+                "comment": "Cell temperature difference too high",
+                "timestamp": log["ts"]
+            })
+
+        return {
+            **(
+                {"temperature_range_anomalies": temperature_range_anomalies}
+                if any(temperature_range_anomalies)
+                else {}
+            ),
+            **(
+                {"temperature_difference_anomalies": temperature_difference_anomalies}
+                if any(temperature_difference_anomalies)
+                else {}
+            )
+        }
 
     def handle_anomalies_detection(self, log):
         voltage_anomalies = self.get_voltage_anomalies(log)
+
         if voltage_anomalies:
             (voltage_anomalies.get("voltage_difference_anomalies") and
              self.voltage_difference_anomalies.extend(voltage_anomalies["voltage_difference_anomalies"]))
-            voltage_anomalies.get("voltage_range_anomalies") and self.voltage_range_anomalies.extend(voltage_anomalies["voltage_range_anomalies"])
+
+            (voltage_anomalies.get("voltage_range_anomalies") and
+             self.voltage_range_anomalies.extend(voltage_anomalies["voltage_range_anomalies"]))
+
         temperature_anomalies = self.get_temperature_anomalies(log)
+
+        if temperature_anomalies:
+            (temperature_anomalies.get("temperature_difference_anomalies") and
+             self.temperature_difference_anomalies.extend(temperature_anomalies["temperature_difference_anomalies"]))
+            (temperature_anomalies.get("temperature_range_anomalies") and
+             self.temperature_range_anomalies.extend(temperature_anomalies["temperature_range_anomalies"]))
 
     def get_detected_anomalies(self):
         return {
@@ -220,7 +292,10 @@ class BatteryDataProcessor:
                 "voltage_range_anomalies": self.voltage_range_anomalies,
                 "voltage_difference_anomalies": self.voltage_difference_anomalies
             },
-            "temperature": "temperature_anomalies"
+            "temperature": {
+                "temperature_range_anomalies": self.temperature_range_anomalies,
+                "temperature_difference_anomalies": self.temperature_difference_anomalies
+            }
         }
 
 def handle_battery_data_extraction(log_data):
@@ -255,7 +330,6 @@ def handle_battery_data_extraction(log_data):
     cdc_data = processor.get_average_charge_discharge_cycles_data()
 
     # Third: flagged anomalies (voltage imbalance, cell overheating)
-    # TODO handle temperature anomalies
     anomalies = processor.get_detected_anomalies()
     battery_data = {
         "vehicle_info": {
