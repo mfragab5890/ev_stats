@@ -4,16 +4,17 @@ import time
 import tracemalloc
 from math import floor
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict , List , Optional
 
 
 # --------- Constants & thresholds assumptions ----------
 # Needed event states "drive, charge, rest".
 CHARGE_EVENT = "charge"
+DRIVE_EVENT = "drive"
+REST_EVENT = "rest"
 
 # exclude samples that didn't exceed a certain percentage on calculation for the data to be accurate.
 MIN_DELTA_SOC = 5.0
-
 
 
 class BatteryDataProcessor:
@@ -30,6 +31,11 @@ class BatteryDataProcessor:
         self.charge_results: List[float] = []
         # The battery's original capacity, which we'll need for our SoH calculation.
         self.design_capacity_kwh = design_capacity_kwh
+        # For our cycle counting, we need to track the last SoC seen and the cumulative total change.
+        self.last_soc: Optional[float] = 0.0
+        self.cumulative_soc_delta: float = 0.0
+        self.cumulative_discharge_soc_delta: float = 0.0
+        self.cumulative_charge_soc_delta: float = 0.0
 
     @staticmethod
     def get_single_charge_result(cumulative_charge, delta_soc, design_capacity_kwh):
@@ -72,7 +78,7 @@ class BatteryDataProcessor:
             # The total energy from this charge cycle.
             cumulative_charge = sum([charge['energy_in_kwh'] for charge in last_log])
             # The total change in SoC for this cycle.
-            delta_soc = end_soc - start_soc
+            delta_soc = abs(end_soc - start_soc)
 
             # We only calculate and store the result if the charge cycle was long enough to be meaningful.
             if delta_soc > MIN_DELTA_SOC:
@@ -93,6 +99,27 @@ class BatteryDataProcessor:
             return average
         return None
 
+    def handle_overall_soc_changes(self, current_soc, event):
+        """This method calculates overall and event based SoC delta to calculate cycle of charge/discharge"""
+        # first overall cumulative SoC
+        current_soc_delta = abs(current_soc - self.last_soc)
+        self.cumulative_soc_delta += current_soc_delta
+        self.last_soc = current_soc
+
+        if event == CHARGE_EVENT:
+            self.cumulative_charge_soc_delta += current_soc_delta
+
+        if event == DRIVE_EVENT or event == REST_EVENT:
+            self.cumulative_discharge_soc_delta += current_soc_delta
+
+    def get_average_charge_discharge_cycles_data(self):
+        """This method the actual count for the charge discharge cycles overall & event based"""
+        return {
+            "overall_cdc": round(self.cumulative_soc_delta/100, 2),
+            "charge_cdc": round(self.cumulative_charge_soc_delta/100, 2),
+            "discharge_cdc": round(self.cumulative_discharge_soc_delta/100, 2)
+        }
+
 
 def handle_battery_data_extraction(log_data):
     """This is the main function that coordinates everything. It loops through the logs
@@ -110,8 +137,12 @@ def handle_battery_data_extraction(log_data):
     processor = BatteryDataProcessor(vehicle_data["design_capacity_kwh"])
 
     for i, log in enumerate(logs):
+        # handle overall SoC changes
+        event = log["event"]
+        processor.handle_overall_soc_changes(log["soc"], event)
+
         # We check the `event` to see what kind of data we're looking at.
-        if log["event"] == CHARGE_EVENT:
+        if event == CHARGE_EVENT:
             # We set this flag to True if the next log isn't a charge event, or if it's the last log in the file.
             processor.charge_end = (i+1 < len(logs) and logs[i+1]["event"] != CHARGE_EVENT) or i+1 == len(logs)
             processor.handle_battery_charging_event(log)
@@ -119,7 +150,9 @@ def handle_battery_data_extraction(log_data):
     # First: Battery State of Health (in %).
     soh = processor.get_average_soh()
 
-    # TODO Second: Count of charge/discharge cycles
+    # Second: Count of charge/discharge cycles
+    cdc_data = processor.get_average_charge_discharge_cycles_data()
+
     # TODO Third: flagged anomalies (voltage imbalance, cell overheating)
 
     battery_data = {
@@ -131,7 +164,7 @@ def handle_battery_data_extraction(log_data):
             "design_capacity_kwh": vehicle_data["design_capacity_kwh"]
         },
         "soh": soh,
-        "cd_count": "",
+        "cdc_data": cdc_data,
         "anomalies": ""
     }
     return battery_data
