@@ -1,0 +1,27 @@
+{% extends "base.html" %}{% block content %}
+<h2>Vehicle: {{ vehicle.vin }}</h2>
+<p>{{ vehicle.make or '-' }} {{ vehicle.model or '' }} {{ vehicle.year or '' }}</p>
+<div class="row">
+  <div class="card">
+    <h3>New Report</h3>
+    <form method="post" enctype="multipart/form-data" action="{{ url_for('ev.add_report', vehicle_id=vehicle.id) }}">
+      <label>Upload log JSON file</label><input type="file" name="json_file" accept=".json"/>
+      <p>— or —</p>
+      <label>Paste JSON</label><textarea name="json_text" rows="8" placeholder='{"vehicle": {...}, "samples": [...]}'></textarea>
+      <button type="submit">Analyze & Save</button>
+    </form>
+  </div>
+  <div class="card">
+    <h3>Reports (newest first)</h3>
+    <table><thead><tr><th>Created</th><th>SoH %</th><th>Cycles</th><th>Anomalies</th><th>Download HTML</th></tr></thead><tbody>
+    {% for r in reports %}{% set parsed = r.result_json | loads %}
+    <tr><td>{{ r.created_at }}</td>
+      <td>{{ parsed.get('soh_percentage') if parsed else '-' }}</td>
+      <td>{{ parsed.get('count_of_charge_discharge_cycles') if parsed else '-' }}</td>
+      <td>V: {{ parsed.get('anomalies', {}).get('voltage_imbalance', [])|length }}, T: {{ parsed.get('anomalies', {}).get('overheat', [])|length }}</td>
+      <td><a href="{{ url_for('ev.download_report_html', report_id=r.id) }}">HTML</a></td></tr>
+    {% endfor %}
+    </tbody></table>
+  </div>
+</div>
+{% endblock %}

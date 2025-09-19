@@ -1,0 +1,24 @@
+{% extends "base.html" %}{% block content %}
+<h2>{{ partner.name }}</h2>
+<div class="row">
+  <div class="card">
+    <h3>Add Vehicle</h3>
+    <form method="post" action="{{ url_for('ev.add_vehicle', partner_id=partner.id) }}">
+      <label>VIN</label><input name="vin" required/>
+      <div class="row"><div><label>Make</label><input name="make"/></div>
+      <div><label>Model</label><input name="model"/></div>
+      <div><label>Year</label><input name="year"/></div></div>
+      <button type="submit">Save Vehicle</button>
+    </form>
+  </div>
+  <div class="card">
+    <h3>Vehicles</h3>
+    <table><thead><tr><th>VIN</th><th>Info</th><th>Created</th></tr></thead><tbody>
+    {% for v in vehicles %}<tr>
+      <td><a href="{{ url_for('ev.vehicle_detail', vehicle_id=v.id) }}">{{ v.vin }}</a></td>
+      <td>{{ v.make or '-' }} {{ v.model or '' }} {{ v.year or '' }}</td>
+      <td>{{ v.created_at }}</td></tr>{% endfor %}
+    </tbody></table>
+  </div>
+</div>
+{% endblock %}
