@@ -1,0 +1,1787 @@
+{
+  "vehicle_info": {
+    "vin": "5YJ3E1EA7KF317000",
+    "make": "Tesla",
+    "model": "Model 3 LR",
+    "year": 2022,
+    "design_capacity_kwh": 82.0
+  },
+  "soh": 95.69,
+  "cdc_data": {
+    "overall_cycles": 1.86,
+    "charge_cycles": 1.02,
+    "discharge_cycles": 0.84
+  },
+  "anomalies": {
+    "voltage": {
+      "voltage_range_anomalies": [
+        {
+          "min_voltage": 4.02,
+          "max_voltage": 5.048,
+          "max_allowed_voltage": 4.2,
+          "min_allowed_voltage": 2.5,
+          "comment": "Cell voltage too high",
+          "timestamp": "2025-09-12T07:30:00Z"
+        }
+      ],
+      "voltage_difference_anomalies": [
+        {
+          "voltage_difference": 1028.0000000000005,
+          "comment": "Cell voltage difference exceeds threshold under load",
+          "threshold": 60.0,
+          "timestamp": "2025-09-12T07:30:00Z"
+        },
+        {
+          "voltage_difference": 41.999999999999815,
+          "comment": "Cell voltage difference exceeds threshold at rest",
+          "threshold": 30.0,
+          "timestamp": "2025-09-12T08:10:00Z"
+        },
+        {
+          "voltage_difference": 33.00000000000036,
+          "comment": "Cell voltage difference exceeds threshold at rest",
+          "threshold": 30.0,
+          "timestamp": "2025-09-12T08:11:00Z"
+        },
+        {
+          "voltage_difference": 32.999999999999915,
+          "comment": "Cell voltage difference exceeds threshold at rest",
+          "threshold": 30.0,
+          "timestamp": "2025-09-12T08:13:00Z"
+        },
+        {
+          "voltage_difference": 30.00000000000025,
+          "comment": "Cell voltage difference exceeds threshold at rest",
+          "threshold": 30.0,
+          "timestamp": "2025-09-12T08:14:00Z"
+        },
+        {
+          "voltage_difference": 46.99999999999971,
+          "comment": "Cell voltage difference exceeds threshold at rest",
+          "threshold": 30.0,
+          "timestamp": "2025-09-12T08:15:00Z"
+        },
+        {
+          "voltage_difference": 36.99999999999992,
+          "comment": "Cell voltage difference exceeds threshold at rest",
+          "threshold": 30.0,
+          "timestamp": "2025-09-12T08:16:00Z"
+        },
+        {
+          "voltage_difference": 38.000000000000256,
+          "comment": "Cell voltage difference exceeds threshold at rest",
+          "threshold": 30.0,
+          "timestamp": "2025-09-12T08:18:00Z"
+        },
+        {
+          "voltage_difference": 40.99999999999993,
+          "comment": "Cell voltage difference exceeds threshold at rest",
+          "threshold": 30.0,
+          "timestamp": "2025-09-12T08:19:00Z"
+        },
+        {
+          "voltage_difference": 40.00000000000048,
+          "comment": "Cell voltage difference exceeds threshold at rest",
+          "threshold": 30.0,
+          "timestamp": "2025-09-12T09:40:00Z"
+        },
+        {
+          "voltage_difference": 34.000000000000256,
+          "comment": "Cell voltage difference exceeds threshold at rest",
+          "threshold": 30.0,
+          "timestamp": "2025-09-12T09:41:00Z"
+        },
+        {
+          "voltage_difference": 40.99999999999948,
+          "comment": "Cell voltage difference exceeds threshold at rest",
+          "threshold": 30.0,
+          "timestamp": "2025-09-12T09:42:00Z"
+        },
+        {
+          "voltage_difference": 36.99999999999992,
+          "comment": "Cell voltage difference exceeds threshold at rest",
+          "threshold": 30.0,
+          "timestamp": "2025-09-12T09:43:00Z"
+        },
+        {
+          "voltage_difference": 40.99999999999948,
+          "comment": "Cell voltage difference exceeds threshold at rest",
+          "threshold": 30.0,
+          "timestamp": "2025-09-12T09:44:00Z"
+        },
+        {
+          "voltage_difference": 38.9999999999997,
+          "comment": "Cell voltage difference exceeds threshold at rest",
+          "threshold": 30.0,
+          "timestamp": "2025-09-12T09:45:00Z"
+        },
+        {
+          "voltage_difference": 32.00000000000003,
+          "comment": "Cell voltage difference exceeds threshold at rest",
+          "threshold": 30.0,
+          "timestamp": "2025-09-12T09:46:00Z"
+        },
+        {
+          "voltage_difference": 40.99999999999993,
+          "comment": "Cell voltage difference exceeds threshold at rest",
+          "threshold": 30.0,
+          "timestamp": "2025-09-12T09:47:00Z"
+        },
+        {
+          "voltage_difference": 32.999999999999915,
+          "comment": "Cell voltage difference exceeds threshold at rest",
+          "threshold": 30.0,
+          "timestamp": "2025-09-12T11:08:00Z"
+        },
+        {
+          "voltage_difference": 35.00000000000014,
+          "comment": "Cell voltage difference exceeds threshold at rest",
+          "threshold": 30.0,
+          "timestamp": "2025-09-12T11:09:00Z"
+        },
+        {
+          "voltage_difference": 40.000000000000036,
+          "comment": "Cell voltage difference exceeds threshold at rest",
+          "threshold": 30.0,
+          "timestamp": "2025-09-12T11:10:00Z"
+        },
+        {
+          "voltage_difference": 32.999999999999915,
+          "comment": "Cell voltage difference exceeds threshold at rest",
+          "threshold": 30.0,
+          "timestamp": "2025-09-12T11:11:00Z"
+        },
+        {
+          "voltage_difference": 40.000000000000036,
+          "comment": "Cell voltage difference exceeds threshold at rest",
+          "threshold": 30.0,
+          "timestamp": "2025-09-12T11:12:00Z"
+        },
+        {
+          "voltage_difference": 39.00000000000014,
+          "comment": "Cell voltage difference exceeds threshold at rest",
+          "threshold": 30.0,
+          "timestamp": "2025-09-12T11:13:00Z"
+        },
+        {
+          "voltage_difference": 40.000000000000036,
+          "comment": "Cell voltage difference exceeds threshold at rest",
+          "threshold": 30.0,
+          "timestamp": "2025-09-12T11:14:00Z"
+        },
+        {
+          "voltage_difference": 37.00000000000037,
+          "comment": "Cell voltage difference exceeds threshold at rest",
+          "threshold": 30.0,
+          "timestamp": "2025-09-12T11:15:00Z"
+        },
+        {
+          "voltage_difference": 36.00000000000003,
+          "comment": "Cell voltage difference exceeds threshold at rest",
+          "threshold": 30.0,
+          "timestamp": "2025-09-12T11:16:00Z"
+        },
+        {
+          "voltage_difference": 36.00000000000003,
+          "comment": "Cell voltage difference exceeds threshold at rest",
+          "threshold": 30.0,
+          "timestamp": "2025-09-12T11:17:00Z"
+        },
+        {
+          "voltage_difference": 32.999999999999915,
+          "comment": "Cell voltage difference exceeds threshold at rest",
+          "threshold": 30.0,
+          "timestamp": "2025-09-12T11:18:00Z"
+        },
+        {
+          "voltage_difference": 38.9999999999997,
+          "comment": "Cell voltage difference exceeds threshold at rest",
+          "threshold": 30.0,
+          "timestamp": "2025-09-12T11:19:00Z"
+        }
+      ]
+    },
+    "temperature": {
+      "temperature_range_anomalies": [
+        {
+          "min_cell_temperature": 33.1,
+          "max_cell_temperature": 60.9,
+          "min_allowed_cell_temperature": 0.0,
+          "max_allowed_cell_temperature": 55.0,
+          "comment": "Cell temperature too high",
+          "timestamp": "2025-09-12T07:30:00Z"
+        },
+        {
+          "min_cell_temperature": 0.0,
+          "max_cell_temperature": 55.8,
+          "min_allowed_cell_temperature": 0.0,
+          "max_allowed_cell_temperature": 55.0,
+          "comment": "Cell temperature too high",
+          "timestamp": "2025-09-12T11:39:00Z"
+        }
+      ],
+      "temperature_difference_anomalies": [
+        {
+          "cells_temperature_difference": 27.799999999999997,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T07:30:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.100000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T07:31:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.599999999999998,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T07:32:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.399999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T07:33:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.100000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T07:34:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.100000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T07:35:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.299999999999997,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T07:36:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.200000000000003,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T07:37:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.799999999999997,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T07:38:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.8,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T07:39:00Z"
+        },
+        {
+          "cells_temperature_difference": 11.3,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T07:40:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.999999999999996,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T07:41:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.599999999999998,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T07:42:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.599999999999994,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T07:43:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.7,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T07:44:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.0,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T07:45:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.700000000000003,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T07:46:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.200000000000003,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T07:47:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.100000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T07:48:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.499999999999996,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T07:49:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.100000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T07:50:00Z"
+        },
+        {
+          "cells_temperature_difference": 11.599999999999998,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T07:51:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.600000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T07:52:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.899999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T07:53:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.099999999999998,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T07:54:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.400000000000006,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T07:55:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.799999999999997,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T07:56:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.399999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T07:57:00Z"
+        },
+        {
+          "cells_temperature_difference": 6.5,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T07:58:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.5,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T07:59:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.7,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:00:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.299999999999997,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:01:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.299999999999997,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:02:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.100000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:03:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.5,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:04:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.600000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:05:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.3,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:06:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.400000000000002,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:07:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.399999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:08:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.299999999999997,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:09:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.399999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:10:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.700000000000003,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:11:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.099999999999998,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:12:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.799999999999997,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:13:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.699999999999996,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:14:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.7,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:15:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.299999999999997,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:16:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.000000000000004,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:17:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.2,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:18:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.899999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:19:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.899999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:20:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.7,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:21:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.499999999999996,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:22:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.899999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:23:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.8,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:24:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.099999999999998,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:25:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.299999999999997,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:26:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.200000000000003,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:27:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.899999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:28:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.799999999999997,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:29:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.299999999999997,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:30:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.100000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:31:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.7,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:32:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.9999999999999964,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:33:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.400000000000002,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:34:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.200000000000003,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:35:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.000000000000004,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:36:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.5,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:37:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.2,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:38:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.100000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:39:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.400000000000006,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:40:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.600000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:41:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.800000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:42:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.0,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:43:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.3,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:44:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.399999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:45:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.900000000000002,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:46:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.699999999999996,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:47:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.0,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:48:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.700000000000003,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:49:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.5,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:50:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.799999999999997,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:51:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.600000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:52:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.100000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:53:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.399999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:54:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.100000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:55:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.0,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:56:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.100000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:57:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.100000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:58:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.3,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T08:59:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.7,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:00:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.299999999999997,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:01:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.599999999999998,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:02:00Z"
+        },
+        {
+          "cells_temperature_difference": 11.3,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:03:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.299999999999997,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:04:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.399999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:05:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.399999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:06:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.2,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:07:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.3,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:08:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.199999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:09:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.700000000000003,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:10:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.5,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:11:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.5,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:12:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.499999999999996,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:13:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.100000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:14:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.0,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:15:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.899999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:16:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.399999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:17:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.600000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:18:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.899999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:19:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.0,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:20:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.899999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:21:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.700000000000003,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:22:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.0,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:23:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.200000000000003,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:24:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.300000000000004,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:25:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.100000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:26:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.600000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:27:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.799999999999997,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:28:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.300000000000004,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:29:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.5,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:30:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.799999999999997,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:31:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.800000000000004,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:32:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.100000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:33:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.600000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:34:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.200000000000003,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:35:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.800000000000004,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:36:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.599999999999994,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:37:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.699999999999996,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:38:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.899999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:39:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.0,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:40:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.0,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:41:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.5,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:42:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.100000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:43:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.899999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:44:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.600000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:45:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.3,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:46:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.199999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:47:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.899999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:48:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.600000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:49:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.899999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:50:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.0,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:51:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.699999999999996,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:52:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.800000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:53:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.000000000000004,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:54:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.2,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:55:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.200000000000003,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:56:00Z"
+        },
+        {
+          "cells_temperature_difference": 5.799999999999997,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:57:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.100000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:58:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.5,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T09:59:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.899999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:00:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.899999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:01:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.0,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:02:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.5,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:03:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.899999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:04:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.299999999999997,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:05:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.299999999999997,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:06:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.600000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:07:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.799999999999997,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:08:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.399999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:09:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.0,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:10:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.100000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:11:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.599999999999994,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:12:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.700000000000003,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:13:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.900000000000002,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:14:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.700000000000003,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:15:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.5,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:16:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.899999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:17:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.299999999999997,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:18:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.5,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:19:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.899999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:20:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.2,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:21:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.0,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:22:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.600000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:23:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.699999999999996,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:24:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.0,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:25:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.100000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:26:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.300000000000004,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:27:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.199999999999996,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:28:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.600000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:29:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.100000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:30:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.799999999999997,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:31:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.200000000000003,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:32:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.600000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:33:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.100000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:34:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.100000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:35:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.799999999999997,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:36:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.199999999999996,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:37:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.400000000000006,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:38:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.5,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:39:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.199999999999996,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:40:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.0,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:41:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.299999999999997,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:42:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.100000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:43:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.2,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:44:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.399999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:45:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.399999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:46:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.699999999999996,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:47:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.699999999999996,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:48:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.200000000000003,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:49:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.399999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:50:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.8,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:51:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.600000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:52:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.299999999999997,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:53:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.799999999999997,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:54:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.5,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:55:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.899999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:56:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.799999999999997,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:57:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.199999999999996,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:58:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.0,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T10:59:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.299999999999997,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:00:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.600000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:01:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.600000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:02:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.0,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:03:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.300000000000004,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:04:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.299999999999997,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:05:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.400000000000002,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:06:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.200000000000003,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:07:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.2,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:08:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.5,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:09:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.700000000000003,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:10:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.999999999999996,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:11:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.100000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:12:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.899999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:13:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.099999999999998,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:14:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.899999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:15:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.5,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:16:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.900000000000002,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:17:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.5,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:18:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.599999999999998,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:19:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.399999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:20:00Z"
+        },
+        {
+          "cells_temperature_difference": 12.000000000000004,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:21:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.600000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:22:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.699999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:23:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.2,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:24:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.8,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:25:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.499999999999996,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:26:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.8,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:27:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.2,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:28:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.5,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:29:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.000000000000004,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:30:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.100000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:31:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.8,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:32:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.000000000000004,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:33:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.099999999999998,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:34:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.899999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:35:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.700000000000003,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:36:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.3,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:37:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.600000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:38:00Z"
+        },
+        {
+          "cells_temperature_difference": 55.8,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:39:00Z"
+        },
+        {
+          "cells_temperature_difference": 7.600000000000001,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:40:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.499999999999996,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:41:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.799999999999997,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:42:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.800000000000004,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:43:00Z"
+        },
+        {
+          "cells_temperature_difference": 10.5,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:44:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.200000000000003,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:45:00Z"
+        },
+        {
+          "cells_temperature_difference": 11.3,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:46:00Z"
+        },
+        {
+          "cells_temperature_difference": 9.400000000000002,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:47:00Z"
+        },
+        {
+          "cells_temperature_difference": 8.299999999999997,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:48:00Z"
+        },
+        {
+          "cells_temperature_difference": 11.399999999999999,
+          "max_cells_temperature_difference": 5.0,
+          "comment": "Cell temperature difference too high",
+          "timestamp": "2025-09-12T11:49:00Z"
+        }
+      ]
+    }
+  }
+}

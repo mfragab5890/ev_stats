@@ -1,0 +1,2267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EV Battery Health Report</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --card: #121830;
+      --ink: #e8ecff;
+      --muted: #9aa3b2;
+      --accent: #5b8cff;
+      --ok: #2ecc71;
+      --warn: #f1c40f;
+      --bad: #e74c3c;
+      --chip: #1b223d;
+    }
+    html, body { background: var(--bg); color: var(--ink); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial; margin: 0; }
+    .container { max-width: 960px; margin: 24px auto; padding: 0 16px; }
+    .header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+    .title { font-size: 28px; font-weight: 700; margin: 0; }
+    .subtitle { color: var(--muted); margin: 4px 0 0 0; }
+    .card { background: var(--card); border-radius: 16px; padding: 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.35); }
+    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
+    .col-12 { grid-column: span 12; }
+    .col-6 { grid-column: span 6; }
+    .chip { background: var(--chip); display: inline-block; padding: 6px 10px; border-radius: 999px; font-size: 12px; color: var(--muted); margin-right: 8px; }
+    .metric { font-size: 36px; font-weight: 800; margin: 4px 0; }
+    .label { color: var(--muted); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+    .row { display: flex; gap: 16px; align-items: center; }
+    .spacer { height: 12px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 10px 8px; font-size: 14px; }
+    thead th { color: var(--muted); font-weight: 600; border-bottom: 1px solid #2a335a; }
+    tbody tr { border-bottom: 1px solid #1b244a; }
+    .pill { padding: 2px 8px; border-radius: 10px; font-size: 12px; display: inline-block; }
+    .ok { background: rgba(46, 204, 113, .15); color: var(--ok); }
+    .warn { background: rgba(241, 196, 15, .15); color: var(--warn); }
+    .bad { background: rgba(231, 76, 60, .2); color: var(--bad); }
+    .muted { color: var(--muted); }
+    .small { font-size: 12px; }
+    .right { text-align: right; }
+    .footer { color: var(--muted); font-size: 12px; margin-top: 20px; }
+    @media print {
+    /* Light theme + crisp borders for print engines */
+    body { background: #fff; color: #111; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .card { box-shadow: none; border: 1px solid #ddd; }
+    :root { --ink: #111; --muted: #555; }
+
+    /* Use Flex instead of CSS Grid for print (WeasyPrint/wkhtmltopdf don’t support grid well) */
+    .grid { display: flex; flex-wrap: wrap; gap: 16px; }
+    .col-12 { flex: 0 0 100%; }
+    .col-6  { flex: 0 0 calc(50% - 8px); }  /* 8px = half the gap */
+
+    /* Page + breaks */
+    @page { size: A4; margin: 16mm; }
+    .header, .card, table { break-inside: avoid; }
+    tr, td, th { break-inside: avoid; }
+    thead { display: table-header-group; } /* repeat table headers on page breaks */
+  }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div>
+        <h1 class="title">EV Battery Health Report</h1>
+        <p class="subtitle">Generated: 2025-09-20 09:11 UTC</p>
+      </div>
+      <div class="card" style="min-width: 260px;">
+        <div class="label">Vehicle</div>
+        <div style="font-weight:700;margin-top:6px">Tesla Model 3 LR</div>
+        <div class="muted small">2022 &middot; VIN 5YJ3E1EA7KF317000</div>
+        <div class="spacer"></div>
+        <div class="row">
+          <span class="chip">Design Capacity</span>
+          <div>82.0 kWh</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="spacer"></div>
+
+    <div class="grid">
+      <div class="col-6">
+        <div class="card">
+          <div class="label">Battery State of Health</div>
+          
+          <div class="metric">95.69<span class="small">%</span></div>
+          <span class="pill ok">Good</span>
+          <div class="muted small">SoH is estimated from charge events using ΔSoC and energy-in. See notes below.</div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="card">
+          <div class="label">Charge / Discharge Cycles</div>
+          <div class="row">
+            <div style="flex:1">
+              <div class="small muted">Overall (EFC)</div>
+              <div class="metric">1.86</div>
+            </div>
+            <div style="flex:1">
+              <div class="small muted">Charge</div>
+              <div class="metric">1.02</div>
+            </div>
+            <div style="flex:1">
+              <div class="small muted">Discharge</div>
+              <div class="metric">0.84</div>
+            </div>
+          </div>
+          <div class="muted small">EFC sums SoC changes over time / 100.</div>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="card">
+          <div class="label">Voltage Anomalies</div>
+          
+            
+              <h3 class="small muted">Out-of-Range</h3>
+              <table>
+                <thead><tr><th>Timestamp</th><th>Min V</th><th>Max V</th><th>Allowed</th><th>Note</th></tr></thead>
+                <tbody>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T07:30:00Z</td>
+                    <td>4.020 V</td>
+                    <td>5.048 V</td>
+                    <td class="small muted">2.5–4.2 V</td>
+                    <td><span class="pill bad">Cell voltage too high</span></td>
+                  </tr>
+                
+                </tbody>
+              </table>
+            
+            
+              <div class="spacer"></div>
+              <h3 class="small muted">Cell Imbalance</h3>
+              <table>
+                <thead><tr><th>Timestamp</th><th class="right">ΔV (mV)</th><th>Threshold</th><th>Context</th></tr></thead>
+                <tbody>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T07:30:00Z</td>
+                    <td class="right">1028</td>
+                    <td class="small">60.0 mV</td>
+                    <td><span class="pill bad">Cell voltage difference exceeds threshold under load</span></td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:10:00Z</td>
+                    <td class="right">42</td>
+                    <td class="small">30.0 mV</td>
+                    <td><span class="pill warn">Cell voltage difference exceeds threshold at rest</span></td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:11:00Z</td>
+                    <td class="right">33</td>
+                    <td class="small">30.0 mV</td>
+                    <td><span class="pill warn">Cell voltage difference exceeds threshold at rest</span></td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:13:00Z</td>
+                    <td class="right">33</td>
+                    <td class="small">30.0 mV</td>
+                    <td><span class="pill warn">Cell voltage difference exceeds threshold at rest</span></td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:14:00Z</td>
+                    <td class="right">30</td>
+                    <td class="small">30.0 mV</td>
+                    <td><span class="pill warn">Cell voltage difference exceeds threshold at rest</span></td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:15:00Z</td>
+                    <td class="right">47</td>
+                    <td class="small">30.0 mV</td>
+                    <td><span class="pill warn">Cell voltage difference exceeds threshold at rest</span></td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:16:00Z</td>
+                    <td class="right">37</td>
+                    <td class="small">30.0 mV</td>
+                    <td><span class="pill warn">Cell voltage difference exceeds threshold at rest</span></td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:18:00Z</td>
+                    <td class="right">38</td>
+                    <td class="small">30.0 mV</td>
+                    <td><span class="pill warn">Cell voltage difference exceeds threshold at rest</span></td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:19:00Z</td>
+                    <td class="right">41</td>
+                    <td class="small">30.0 mV</td>
+                    <td><span class="pill warn">Cell voltage difference exceeds threshold at rest</span></td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:40:00Z</td>
+                    <td class="right">40</td>
+                    <td class="small">30.0 mV</td>
+                    <td><span class="pill warn">Cell voltage difference exceeds threshold at rest</span></td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:41:00Z</td>
+                    <td class="right">34</td>
+                    <td class="small">30.0 mV</td>
+                    <td><span class="pill warn">Cell voltage difference exceeds threshold at rest</span></td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:42:00Z</td>
+                    <td class="right">41</td>
+                    <td class="small">30.0 mV</td>
+                    <td><span class="pill warn">Cell voltage difference exceeds threshold at rest</span></td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:43:00Z</td>
+                    <td class="right">37</td>
+                    <td class="small">30.0 mV</td>
+                    <td><span class="pill warn">Cell voltage difference exceeds threshold at rest</span></td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:44:00Z</td>
+                    <td class="right">41</td>
+                    <td class="small">30.0 mV</td>
+                    <td><span class="pill warn">Cell voltage difference exceeds threshold at rest</span></td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:45:00Z</td>
+                    <td class="right">39</td>
+                    <td class="small">30.0 mV</td>
+                    <td><span class="pill warn">Cell voltage difference exceeds threshold at rest</span></td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:46:00Z</td>
+                    <td class="right">32</td>
+                    <td class="small">30.0 mV</td>
+                    <td><span class="pill warn">Cell voltage difference exceeds threshold at rest</span></td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:47:00Z</td>
+                    <td class="right">41</td>
+                    <td class="small">30.0 mV</td>
+                    <td><span class="pill warn">Cell voltage difference exceeds threshold at rest</span></td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:08:00Z</td>
+                    <td class="right">33</td>
+                    <td class="small">30.0 mV</td>
+                    <td><span class="pill warn">Cell voltage difference exceeds threshold at rest</span></td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:09:00Z</td>
+                    <td class="right">35</td>
+                    <td class="small">30.0 mV</td>
+                    <td><span class="pill warn">Cell voltage difference exceeds threshold at rest</span></td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:10:00Z</td>
+                    <td class="right">40</td>
+                    <td class="small">30.0 mV</td>
+                    <td><span class="pill warn">Cell voltage difference exceeds threshold at rest</span></td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:11:00Z</td>
+                    <td class="right">33</td>
+                    <td class="small">30.0 mV</td>
+                    <td><span class="pill warn">Cell voltage difference exceeds threshold at rest</span></td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:12:00Z</td>
+                    <td class="right">40</td>
+                    <td class="small">30.0 mV</td>
+                    <td><span class="pill warn">Cell voltage difference exceeds threshold at rest</span></td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:13:00Z</td>
+                    <td class="right">39</td>
+                    <td class="small">30.0 mV</td>
+                    <td><span class="pill warn">Cell voltage difference exceeds threshold at rest</span></td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:14:00Z</td>
+                    <td class="right">40</td>
+                    <td class="small">30.0 mV</td>
+                    <td><span class="pill warn">Cell voltage difference exceeds threshold at rest</span></td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:15:00Z</td>
+                    <td class="right">37</td>
+                    <td class="small">30.0 mV</td>
+                    <td><span class="pill warn">Cell voltage difference exceeds threshold at rest</span></td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:16:00Z</td>
+                    <td class="right">36</td>
+                    <td class="small">30.0 mV</td>
+                    <td><span class="pill warn">Cell voltage difference exceeds threshold at rest</span></td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:17:00Z</td>
+                    <td class="right">36</td>
+                    <td class="small">30.0 mV</td>
+                    <td><span class="pill warn">Cell voltage difference exceeds threshold at rest</span></td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:18:00Z</td>
+                    <td class="right">33</td>
+                    <td class="small">30.0 mV</td>
+                    <td><span class="pill warn">Cell voltage difference exceeds threshold at rest</span></td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:19:00Z</td>
+                    <td class="right">39</td>
+                    <td class="small">30.0 mV</td>
+                    <td><span class="pill warn">Cell voltage difference exceeds threshold at rest</span></td>
+                  </tr>
+                
+                </tbody>
+              </table>
+            
+          
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="card">
+          <div class="label">Temperature Anomalies</div>
+          
+            
+              <h3 class="small muted">Out-of-Range</h3>
+              <table>
+                <thead><tr><th>Timestamp</th><th>Min (°C)</th><th>Max (°C)</th><th>Allowed</th><th>Note</th></tr></thead>
+                <tbody>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T07:30:00Z</td>
+                    <td>33.1</td>
+                    <td>60.9</td>
+                    <td class="small muted">0.0–55.0 °C</td>
+                    <td><span class="pill bad">Cell temperature too high</span></td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:39:00Z</td>
+                    <td>0.0</td>
+                    <td>55.8</td>
+                    <td class="small muted">0.0–55.0 °C</td>
+                    <td><span class="pill bad">Cell temperature too high</span></td>
+                  </tr>
+                
+                </tbody>
+              </table>
+            
+            
+              <div class="spacer"></div>
+              <h3 class="small muted">Spread Between Cells</h3>
+              <table>
+                <thead><tr><th>Timestamp</th><th class="right">ΔT (°C)</th><th>Max Allowed</th></tr></thead>
+                <tbody>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T07:30:00Z</td>
+                    <td class="right">27.8</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T07:31:00Z</td>
+                    <td class="right">10.1</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T07:32:00Z</td>
+                    <td class="right">7.6</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T07:33:00Z</td>
+                    <td class="right">9.4</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T07:34:00Z</td>
+                    <td class="right">9.1</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T07:35:00Z</td>
+                    <td class="right">8.1</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T07:36:00Z</td>
+                    <td class="right">8.3</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T07:37:00Z</td>
+                    <td class="right">10.2</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T07:38:00Z</td>
+                    <td class="right">7.8</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T07:39:00Z</td>
+                    <td class="right">8.8</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T07:40:00Z</td>
+                    <td class="right">11.3</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T07:41:00Z</td>
+                    <td class="right">9.0</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T07:42:00Z</td>
+                    <td class="right">8.6</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T07:43:00Z</td>
+                    <td class="right">8.6</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T07:44:00Z</td>
+                    <td class="right">9.7</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T07:45:00Z</td>
+                    <td class="right">10.0</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T07:46:00Z</td>
+                    <td class="right">8.7</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T07:47:00Z</td>
+                    <td class="right">10.2</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T07:48:00Z</td>
+                    <td class="right">9.1</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T07:49:00Z</td>
+                    <td class="right">9.5</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T07:50:00Z</td>
+                    <td class="right">8.1</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T07:51:00Z</td>
+                    <td class="right">11.6</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T07:52:00Z</td>
+                    <td class="right">8.6</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T07:53:00Z</td>
+                    <td class="right">8.9</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T07:54:00Z</td>
+                    <td class="right">10.1</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T07:55:00Z</td>
+                    <td class="right">8.4</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T07:56:00Z</td>
+                    <td class="right">9.8</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T07:57:00Z</td>
+                    <td class="right">9.4</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T07:58:00Z</td>
+                    <td class="right">6.5</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T07:59:00Z</td>
+                    <td class="right">9.5</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:00:00Z</td>
+                    <td class="right">8.7</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:01:00Z</td>
+                    <td class="right">10.3</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:02:00Z</td>
+                    <td class="right">8.3</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:03:00Z</td>
+                    <td class="right">9.1</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:04:00Z</td>
+                    <td class="right">9.5</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:05:00Z</td>
+                    <td class="right">7.6</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:06:00Z</td>
+                    <td class="right">9.3</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:07:00Z</td>
+                    <td class="right">8.4</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:08:00Z</td>
+                    <td class="right">7.4</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:09:00Z</td>
+                    <td class="right">7.3</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:10:00Z</td>
+                    <td class="right">8.4</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:11:00Z</td>
+                    <td class="right">9.7</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:12:00Z</td>
+                    <td class="right">9.1</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:13:00Z</td>
+                    <td class="right">8.8</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:14:00Z</td>
+                    <td class="right">8.7</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:15:00Z</td>
+                    <td class="right">8.7</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:16:00Z</td>
+                    <td class="right">10.3</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:17:00Z</td>
+                    <td class="right">8.0</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:18:00Z</td>
+                    <td class="right">8.2</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:19:00Z</td>
+                    <td class="right">8.9</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:20:00Z</td>
+                    <td class="right">8.9</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:21:00Z</td>
+                    <td class="right">8.7</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:22:00Z</td>
+                    <td class="right">9.5</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:23:00Z</td>
+                    <td class="right">8.9</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:24:00Z</td>
+                    <td class="right">8.8</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:25:00Z</td>
+                    <td class="right">10.1</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:26:00Z</td>
+                    <td class="right">8.3</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:27:00Z</td>
+                    <td class="right">7.2</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:28:00Z</td>
+                    <td class="right">8.9</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:29:00Z</td>
+                    <td class="right">9.8</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:30:00Z</td>
+                    <td class="right">9.3</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:31:00Z</td>
+                    <td class="right">9.1</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:32:00Z</td>
+                    <td class="right">10.7</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:33:00Z</td>
+                    <td class="right">8.0</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:34:00Z</td>
+                    <td class="right">10.4</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:35:00Z</td>
+                    <td class="right">7.2</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:36:00Z</td>
+                    <td class="right">10.0</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:37:00Z</td>
+                    <td class="right">7.5</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:38:00Z</td>
+                    <td class="right">8.2</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:39:00Z</td>
+                    <td class="right">9.1</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:40:00Z</td>
+                    <td class="right">7.4</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:41:00Z</td>
+                    <td class="right">9.6</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:42:00Z</td>
+                    <td class="right">7.8</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:43:00Z</td>
+                    <td class="right">9.0</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:44:00Z</td>
+                    <td class="right">8.3</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:45:00Z</td>
+                    <td class="right">9.4</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:46:00Z</td>
+                    <td class="right">8.9</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:47:00Z</td>
+                    <td class="right">10.7</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:48:00Z</td>
+                    <td class="right">10.0</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:49:00Z</td>
+                    <td class="right">9.7</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:50:00Z</td>
+                    <td class="right">9.5</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:51:00Z</td>
+                    <td class="right">9.8</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:52:00Z</td>
+                    <td class="right">7.6</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:53:00Z</td>
+                    <td class="right">9.1</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:54:00Z</td>
+                    <td class="right">8.4</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:55:00Z</td>
+                    <td class="right">9.1</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:56:00Z</td>
+                    <td class="right">7.0</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:57:00Z</td>
+                    <td class="right">9.1</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:58:00Z</td>
+                    <td class="right">10.1</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T08:59:00Z</td>
+                    <td class="right">9.3</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:00:00Z</td>
+                    <td class="right">8.7</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:01:00Z</td>
+                    <td class="right">7.3</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:02:00Z</td>
+                    <td class="right">10.6</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:03:00Z</td>
+                    <td class="right">11.3</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:04:00Z</td>
+                    <td class="right">9.3</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:05:00Z</td>
+                    <td class="right">8.4</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:06:00Z</td>
+                    <td class="right">8.4</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:07:00Z</td>
+                    <td class="right">8.2</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:08:00Z</td>
+                    <td class="right">8.3</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:09:00Z</td>
+                    <td class="right">7.2</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:10:00Z</td>
+                    <td class="right">8.7</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:11:00Z</td>
+                    <td class="right">8.5</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:12:00Z</td>
+                    <td class="right">9.5</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:13:00Z</td>
+                    <td class="right">10.5</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:14:00Z</td>
+                    <td class="right">7.1</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:15:00Z</td>
+                    <td class="right">9.0</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:16:00Z</td>
+                    <td class="right">9.9</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:17:00Z</td>
+                    <td class="right">9.4</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:18:00Z</td>
+                    <td class="right">10.6</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:19:00Z</td>
+                    <td class="right">8.9</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:20:00Z</td>
+                    <td class="right">9.0</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:21:00Z</td>
+                    <td class="right">7.9</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:22:00Z</td>
+                    <td class="right">9.7</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:23:00Z</td>
+                    <td class="right">10.0</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:24:00Z</td>
+                    <td class="right">8.2</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:25:00Z</td>
+                    <td class="right">9.3</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:26:00Z</td>
+                    <td class="right">7.1</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:27:00Z</td>
+                    <td class="right">8.6</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:28:00Z</td>
+                    <td class="right">7.8</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:29:00Z</td>
+                    <td class="right">10.3</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:30:00Z</td>
+                    <td class="right">8.5</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:31:00Z</td>
+                    <td class="right">7.8</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:32:00Z</td>
+                    <td class="right">7.8</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:33:00Z</td>
+                    <td class="right">10.1</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:34:00Z</td>
+                    <td class="right">9.6</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:35:00Z</td>
+                    <td class="right">10.2</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:36:00Z</td>
+                    <td class="right">7.8</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:37:00Z</td>
+                    <td class="right">10.6</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:38:00Z</td>
+                    <td class="right">8.7</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:39:00Z</td>
+                    <td class="right">8.9</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:40:00Z</td>
+                    <td class="right">10.0</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:41:00Z</td>
+                    <td class="right">10.0</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:42:00Z</td>
+                    <td class="right">7.5</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:43:00Z</td>
+                    <td class="right">10.1</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:44:00Z</td>
+                    <td class="right">7.9</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:45:00Z</td>
+                    <td class="right">9.6</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:46:00Z</td>
+                    <td class="right">9.3</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:47:00Z</td>
+                    <td class="right">7.2</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:48:00Z</td>
+                    <td class="right">9.9</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:49:00Z</td>
+                    <td class="right">8.6</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:50:00Z</td>
+                    <td class="right">8.9</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:51:00Z</td>
+                    <td class="right">10.0</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:52:00Z</td>
+                    <td class="right">7.7</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:53:00Z</td>
+                    <td class="right">7.8</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:54:00Z</td>
+                    <td class="right">10.0</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:55:00Z</td>
+                    <td class="right">10.2</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:56:00Z</td>
+                    <td class="right">9.2</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:57:00Z</td>
+                    <td class="right">5.8</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:58:00Z</td>
+                    <td class="right">8.1</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T09:59:00Z</td>
+                    <td class="right">9.5</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:00:00Z</td>
+                    <td class="right">9.9</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:01:00Z</td>
+                    <td class="right">9.9</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:02:00Z</td>
+                    <td class="right">8.0</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:03:00Z</td>
+                    <td class="right">9.5</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:04:00Z</td>
+                    <td class="right">8.9</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:05:00Z</td>
+                    <td class="right">8.3</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:06:00Z</td>
+                    <td class="right">8.3</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:07:00Z</td>
+                    <td class="right">10.6</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:08:00Z</td>
+                    <td class="right">7.8</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:09:00Z</td>
+                    <td class="right">9.4</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:10:00Z</td>
+                    <td class="right">8.0</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:11:00Z</td>
+                    <td class="right">8.1</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:12:00Z</td>
+                    <td class="right">8.6</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:13:00Z</td>
+                    <td class="right">8.7</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:14:00Z</td>
+                    <td class="right">10.9</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:15:00Z</td>
+                    <td class="right">8.7</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:16:00Z</td>
+                    <td class="right">9.5</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:17:00Z</td>
+                    <td class="right">8.9</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:18:00Z</td>
+                    <td class="right">8.3</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:19:00Z</td>
+                    <td class="right">8.5</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:20:00Z</td>
+                    <td class="right">8.9</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:21:00Z</td>
+                    <td class="right">8.2</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:22:00Z</td>
+                    <td class="right">7.0</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:23:00Z</td>
+                    <td class="right">8.6</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:24:00Z</td>
+                    <td class="right">7.7</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:25:00Z</td>
+                    <td class="right">10.0</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:26:00Z</td>
+                    <td class="right">9.1</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:27:00Z</td>
+                    <td class="right">8.3</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:28:00Z</td>
+                    <td class="right">10.2</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:29:00Z</td>
+                    <td class="right">8.6</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:30:00Z</td>
+                    <td class="right">8.1</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:31:00Z</td>
+                    <td class="right">8.8</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:32:00Z</td>
+                    <td class="right">10.2</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:33:00Z</td>
+                    <td class="right">8.6</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:34:00Z</td>
+                    <td class="right">9.1</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:35:00Z</td>
+                    <td class="right">9.1</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:36:00Z</td>
+                    <td class="right">9.8</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:37:00Z</td>
+                    <td class="right">10.2</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:38:00Z</td>
+                    <td class="right">8.4</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:39:00Z</td>
+                    <td class="right">7.5</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:40:00Z</td>
+                    <td class="right">8.2</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:41:00Z</td>
+                    <td class="right">9.0</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:42:00Z</td>
+                    <td class="right">9.3</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:43:00Z</td>
+                    <td class="right">10.1</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:44:00Z</td>
+                    <td class="right">9.2</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:45:00Z</td>
+                    <td class="right">9.4</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:46:00Z</td>
+                    <td class="right">9.4</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:47:00Z</td>
+                    <td class="right">9.7</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:48:00Z</td>
+                    <td class="right">7.7</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:49:00Z</td>
+                    <td class="right">10.2</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:50:00Z</td>
+                    <td class="right">9.4</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:51:00Z</td>
+                    <td class="right">9.8</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:52:00Z</td>
+                    <td class="right">8.6</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:53:00Z</td>
+                    <td class="right">8.3</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:54:00Z</td>
+                    <td class="right">8.8</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:55:00Z</td>
+                    <td class="right">8.5</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:56:00Z</td>
+                    <td class="right">8.9</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:57:00Z</td>
+                    <td class="right">7.8</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:58:00Z</td>
+                    <td class="right">9.2</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T10:59:00Z</td>
+                    <td class="right">8.0</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:00:00Z</td>
+                    <td class="right">8.3</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:01:00Z</td>
+                    <td class="right">7.6</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:02:00Z</td>
+                    <td class="right">7.6</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:03:00Z</td>
+                    <td class="right">10.0</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:04:00Z</td>
+                    <td class="right">9.3</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:05:00Z</td>
+                    <td class="right">8.3</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:06:00Z</td>
+                    <td class="right">10.4</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:07:00Z</td>
+                    <td class="right">8.2</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:08:00Z</td>
+                    <td class="right">10.2</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:09:00Z</td>
+                    <td class="right">7.5</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:10:00Z</td>
+                    <td class="right">7.7</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:11:00Z</td>
+                    <td class="right">9.0</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:12:00Z</td>
+                    <td class="right">9.1</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:13:00Z</td>
+                    <td class="right">9.9</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:14:00Z</td>
+                    <td class="right">10.1</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:15:00Z</td>
+                    <td class="right">8.9</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:16:00Z</td>
+                    <td class="right">9.5</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:17:00Z</td>
+                    <td class="right">8.9</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:18:00Z</td>
+                    <td class="right">8.5</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:19:00Z</td>
+                    <td class="right">7.6</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:20:00Z</td>
+                    <td class="right">9.4</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:21:00Z</td>
+                    <td class="right">12.0</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:22:00Z</td>
+                    <td class="right">10.6</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:23:00Z</td>
+                    <td class="right">7.7</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:24:00Z</td>
+                    <td class="right">8.2</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:25:00Z</td>
+                    <td class="right">10.8</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:26:00Z</td>
+                    <td class="right">9.5</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:27:00Z</td>
+                    <td class="right">8.8</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:28:00Z</td>
+                    <td class="right">10.2</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:29:00Z</td>
+                    <td class="right">8.5</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:30:00Z</td>
+                    <td class="right">8.0</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:31:00Z</td>
+                    <td class="right">7.1</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:32:00Z</td>
+                    <td class="right">10.8</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:33:00Z</td>
+                    <td class="right">9.0</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:34:00Z</td>
+                    <td class="right">8.1</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:35:00Z</td>
+                    <td class="right">7.9</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:36:00Z</td>
+                    <td class="right">9.7</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:37:00Z</td>
+                    <td class="right">9.3</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:38:00Z</td>
+                    <td class="right">7.6</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:39:00Z</td>
+                    <td class="right">55.8</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:40:00Z</td>
+                    <td class="right">7.6</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:41:00Z</td>
+                    <td class="right">8.5</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:42:00Z</td>
+                    <td class="right">9.8</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:43:00Z</td>
+                    <td class="right">8.8</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:44:00Z</td>
+                    <td class="right">10.5</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:45:00Z</td>
+                    <td class="right">9.2</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:46:00Z</td>
+                    <td class="right">11.3</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:47:00Z</td>
+                    <td class="right">9.4</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:48:00Z</td>
+                    <td class="right">8.3</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="small">2025-09-12T11:49:00Z</td>
+                    <td class="right">11.4</td>
+                    <td class="small">5.0 °C</td>
+                  </tr>
+                
+                </tbody>
+              </table>
+            
+          
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="card">
+          <div class="label">Notes</div>
+          <ul class="small muted">
+            <li>SoH derived as: estimated_capacity = energy_in / (ΔSoC/100). SoH% = estimated_capacity / design_capacity × 100.</li>
+            <li>Cycles shown as equivalent-full-cycles (sum of absolute SoC changes / 100).</li>
+            <li>Voltage imbalance thresholds adapt by load (C-rate).</li>
+            <li>For sales use, avoid rounding SoH upward; list confidence bands instead.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      © 2025 Battery Report. Generated by EV Diagnostics.
+    </div>
+  </div>
+</body>
+</html>
