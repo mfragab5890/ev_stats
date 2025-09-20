@@ -4,6 +4,7 @@ A compact analysis toolkit and Flask app that parses EV diagnostic logs and prod
 
 Outputs: **JSON** (machine-readable) and **HTML** (human-readable).  
 Live (Render): https://ev-batterystatistics.onrender.com
+note service might take some time to spin up as it's currently on a free tier if you faced any problem please run the app locally
 
 ---
 
@@ -170,11 +171,11 @@ pip install -r requirements.txt
 
 # Migrations (Flask-Migrate or Alembic—use the one you wired)
 # If Flask-Migrate:
-$env:FLASK_APP = "app:create_app"
+$env:FLASK_APP = "app:app"
 flask db upgrade  # (or: flask db init && flask db migrate && flask db upgrade)
 
 # Start
-flask run  # http://127.0.0.1:5000
+flask run  # http://127.0.0.1:5010
 ```
 
 **Config**
@@ -183,7 +184,7 @@ flask run  # http://127.0.0.1:5000
 
 ### 6.3 Deploy (Render)
 - Build: `pip install -r requirements.txt`
-- Start: `gunicorn "app:create_app()"` (or your chosen WSGI/ASGI runner)
+- Start: `alembic upgrade head && gunicorn app:app` (or your chosen WSGI/ASGI runner)
 - Env vars: `SECRET_KEY`, `SQLALCHEMY_DATABASE_URI` (Render Postgres recommended)
 - Apply migrations on deploy (`flask db upgrade` or `alembic upgrade head`).
 
@@ -191,10 +192,7 @@ flask run  # http://127.0.0.1:5000
 
 ## 7) Troubleshooting
 
-- **Template error “No filter named 'loads'”**  
-  We parse JSON in the view and pass `parsed` into templates. If you prefer a Jinja filter, register one in `app.py`.
-
-- **PDF doesn’t match HTML**  
+- **PDF doesn’t match HTML**
   Skipped by design. For future PDF export, use **headless Chromium** (Playwright) for full CSS Grid support.
 
 - **Duplicate vehicles per partner**  
