@@ -11,17 +11,44 @@
       <button type="submit">Analyze & Save</button>
     </form>
   </div>
+
   <div class="card">
     <h3>Reports (newest first)</h3>
-    <table><thead><tr><th>Created</th><th>SoH %</th><th>Cycles</th><th>Anomalies</th><th>Download HTML</th></tr></thead><tbody>
-    {% for r in reports %}{% set parsed = r.result_json | loads %}
-    <tr><td>{{ r.created_at }}</td>
-      <td>{{ parsed.get('soh_percentage') if parsed else '-' }}</td>
-      <td>{{ parsed.get('count_of_charge_discharge_cycles') if parsed else '-' }}</td>
-      <td>V: {{ parsed.get('anomalies', {}).get('voltage_imbalance', [])|length }}, T: {{ parsed.get('anomalies', {}).get('overheat', [])|length }}</td>
-      <td><a href="{{ url_for('ev.download_report_html', report_id=r.id) }}">HTML</a></td></tr>
-    {% endfor %}
-    </tbody></table>
+    <table>
+      <thead>
+        <tr>
+          <th>Created</th>
+          <th>SoH %</th>
+          <th>Cycles</th>
+          <th>Anomalies (count)</th>
+          <th>Download HTML</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for item in reports %}
+        {% set r = item.report %}
+        {% set parsed = item.parsed %}
+        {% set soh = parsed.get('soh') if parsed else None %}
+        {% set cdc = parsed.get('cdc_data', {}) if parsed else {} %}
+        {% set an = parsed.get('anomalies', {}) if parsed else {} %}
+        {% set v = an.get('voltage', {}) %}
+        {% set t = an.get('temperature', {}) %}
+        {% set total_anom =
+              (v.get('voltage_range_anomalies', [])|length)
+            + (v.get('voltage_difference_anomalies', [])|length)
+            + (t.get('temperature_range_anomalies', [])|length)
+            + (t.get('temperature_difference_anomalies', [])|length)
+        %}
+        <tr>
+          <td>{{ r.created_at }}</td>
+          <td>{{ '%.2f'|format(soh) if soh is not none else '-' }}</td>
+          <td>{{ cdc.get('overall_cycles', '-') }}</td>
+          <td>{{ total_anom }}</td>
+          <td><a href="{{ url_for('ev.download_report_html', report_id=r.id) }}">HTML</a></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
   </div>
 </div>
 {% endblock %}

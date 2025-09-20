@@ -2,8 +2,8 @@ from __future__ import annotations
 import json
 from typing import Optional, Dict, Any
 from apps.ev import db_utils
+from build_report import build_reports
 from soh_analysis import handle_battery_data_extraction
-from utils import render_report_html
 
 
 def svc_create_partner(name: str):
@@ -47,9 +47,6 @@ def svc_get_report(rid: int):
 def svc_render_report_html(rid: int) -> str:
     rep = db_utils.get_report(rid)
     if not rep: return "<h1>Report not found</h1>"
-    veh = db_utils.get_vehicle(rep.vehicle_id)
-    partner = db_utils.get_partner(veh.partner_id) if veh else None
     result = json.loads(rep.result_json)
-    vehicle_payload = {"vin": veh.vin, "make": veh.make, "model": veh.model, "year": veh.year} if veh else {}
-    partner_payload = {"name": partner.name} if partner else {}
-    return render_report_html(result, vehicle_payload, partner_payload)
+    reports = build_reports(result, get_html=True)
+    return reports["html"]

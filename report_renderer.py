@@ -7,6 +7,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 def render_report(
     data: Dict[str, Any],
     out_html_path: str,
+    get_html: bool,
     template_dir: Optional[str] = None,
     template_name: str = "report.html",
 ) -> Dict[str, str]:
@@ -33,6 +34,9 @@ def render_report(
         generated_at=datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"),
         year=datetime.utcnow().year,
     )
+    if get_html:
+        out["html"] = html
+        return out
 
     out_html.write_text(html, encoding="utf-8")
     out["html"] = str(out_html.resolve())

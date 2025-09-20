@@ -62,7 +62,11 @@ def vehicle_detail(vehicle_id: int):
         flash("Vehicle not found", "error")
         return redirect(url_for("ev.list_partners"))
     reports = services.svc_list_vehicle_reports(vehicle.id)
-    return render_template("vehicle_detail.html", vehicle=vehicle, reports=reports)
+    reports_parsed = [
+        {"report": r, "parsed": (json.loads(r.result_json or "{}") if r.result_json else {})}
+        for r in reports
+    ]
+    return render_template("vehicle_detail.html", vehicle=vehicle, reports=reports_parsed)
 
 
 @ev_bp.route("/vehicles/<int:vehicle_id>/reports", methods=["POST"])
@@ -91,7 +95,7 @@ def add_report(vehicle_id: int):
     return redirect(url_for("ev.vehicle_detail", vehicle_id=vehicle.id))
 
 
-@ev_bp.route("/reports/<int:report_id>/download.html", methods=["GET"])
+@ev_bp.route("/reports/<int:report_id>/download", methods=["GET"])
 def download_report_html(report_id: int):
     html = services.svc_render_report_html(report_id)
     return Response(html, mimetype="text/html",

@@ -29,6 +29,7 @@ def build_reports(
     *,
     template_dir: Path = DEFAULT_TEMPLATE_DIR,
     out_dir: Path = DEFAULT_OUT_DIR,
+    get_html: bool = False
 ) -> Dict[str, Optional[str]]:
     """
     Generate two artifacts ONLY:
@@ -48,6 +49,7 @@ def build_reports(
         out_html_path=str(html_out),
         template_dir=str(template_dir),
         template_name=TEMPLATE_NAME,
+        get_html=get_html,
     )
 
     info = {
